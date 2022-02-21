@@ -9,13 +9,14 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
@@ -33,7 +34,7 @@ import java.util.List;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   // The driver's controller
@@ -42,6 +43,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // set up possible auto start position
+    m_chooser.setDefaultOption("Left-Center","Left-Center"); //
+    m_chooser.addOption("Right-Center","Right-Center");
+    m_chooser.addOption("Left-Up","Left-Up");
+    m_chooser.addOption("Left-Down","Left-Down");
+    m_chooser.addOption("Right-Up", "Right-Up");
+    m_chooser.addOption("Right-Down", "Right-Down");
+    SmartDashboard.putData(m_chooser);
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -56,6 +67,11 @@ public class RobotContainer {
                     -m_driverController.getLeftY(), m_driverController.getRightX()*.35),
             m_robotDrive));
   }
+
+  public SendableChooser<String> autoStartChooser(){
+    return m_chooser;
+  }
+  
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -79,21 +95,47 @@ public class RobotContainer {
     m_robotDrive.tankDriveVolts(0, 0);
   }
 
-
-  public Command getDummyAutoCommand(){
-      Command c1 = new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, -0.2), m_robotDrive)
-        .withTimeout(3);
-      Command c2 = new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, 0.35), m_robotDrive)
-        .withTimeout(3);
-      return new SequentialCommandGroup(c1, new WaitCommand(2), c2);
+  public Command getAutonomousCommand(){
+    return getDummyAutoCommand();
+    // return getRamesetAutoCommand();
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
+  public Command getDummyAutoCommand(){
+    String autoStartPos = m_chooser.getSelected();
+    
+    m_robotDrive.zeroHeading();
+    
+    m_robotDrive.resetOdometry(new Pose2d(6, 4, Rotation2d.fromDegrees(0)));
+
+    return new WaitCommand(2).andThen(
+      new RunCommand(() -> m_robotDrive.arcadeDrive(-0.5, 0), m_robotDrive).withTimeout(0.69)).andThen(
+      new WaitCommand(0.2)).andThen(
+      new RunCommand(() -> m_robotDrive.arcadeDrive(0, -0.25), m_robotDrive).withTimeout(0.5)).andThen(
+        new WaitCommand(0.2)).andThen(
+      new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, 0), m_robotDrive).withTimeout(0.7)).andThen(
+        new WaitCommand(0.2)).andThen(
+      new RunCommand( ()-> m_robotDrive.arcadeDrive(0, 0.25), m_robotDrive).withTimeout(0.875)).andThen(
+        new WaitCommand(0.2)).andThen(
+      new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, 0), m_robotDrive).withTimeout(0.85)).andThen(
+        new RunCommand(() -> m_robotDrive.tankDriveVolts(0,0))
+      );
+        //   );
+
+    // return new WaitCommand(0.5).andThen(
+    //   new RunCommand(
+    //       () -> m_robotDrive.arcadeDrive(-0.5, 0), m_robotDrive))
+    //    .withTimeout(2).andThen(
+    //     new WaitCommand(0.5)).andThen( 
+    //     new RunCommand(
+    //           () -> m_robotDrive.arcadeDrive(0, -0.5), m_robotDrive).withTimeout(0.5)).andThen(
+    //     new RunCommand(
+    //           () -> m_robotDrive.arcadeDrive(0, 0.5), m_robotDrive).withTimeout(0.5)).andThen(
+    //       ()->m_robotDrive.arcadeDrive(0.5,0)
+    //     );
+      
+  }
+
+  public Command getRamesetAutoCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -118,11 +160,12 @@ public class RobotContainer {
     Trajectory exampleTrajectory =
         TrajectoryGenerator.generateTrajectory(
             // Start at (1, 2) facing the +X direction
-            new Pose2d(1, 2, new Rotation2d(0)),
+            new Pose2d(6.18, 3.975, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(2, 3), new Translation2d(3, 1)),
+            // List.of(new Translation2d(6.4, 4.05), new Translation2d(6.7, 4.15)),
+            List.of(),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(4, 2, new Rotation2d(0)),
+            new Pose2d(6.981, 4.423, new Rotation2d(-0.349)),
             // Pass config
             config);
 

@@ -31,10 +31,24 @@
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Robot": {
+          "length": 0.8107680082321167
+        },
+        "height": 8.229599952697754,
+        "image": "C:\\Users\\alan\\Pictures\\FRC-2022-Field.jpg",
+        "units": "meters",
+        "width": 16.459199905395508,
+        "window": {
+          "name": "RAPID REACT - FRC 2022",
+          "visible": true
+        }
+      },
+      "/SmartDashboard/SendableChooser[0]": {
         "window": {
           "visible": true
         }
@@ -43,7 +57,7 @@
   },
   "NetworkTables": {
     "SmartDashboard": {
-      "Field": {
+      "SendableChooser[0]": {
         "open": true
       },
       "open": true
@@ -53,7 +67,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 401,
+          "height": -37,
           "series": [
             {
               "color": [

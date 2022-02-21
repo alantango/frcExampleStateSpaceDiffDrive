@@ -82,7 +82,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
-    resetEncoders();
+    resetEncoders(); // original line
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
     if (RobotBase.isSimulation()) { // If our robot is simulated
@@ -104,7 +104,6 @@ public class DriveSubsystem extends SubsystemBase {
       // the Field2d class lets us visualize our robot in the simulation GUI.
       m_fieldSim = new Field2d();
       SmartDashboard.putData("Field", m_fieldSim);
-      Robot.log("SIM driveTrain constructed...");
     }
   }
 
@@ -116,7 +115,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftEncoder.getDistance(),
         m_rightEncoder.getDistance());
     m_fieldSim.setRobotPose(getPose());
-    Robot.log("driveTrain periodic...");
+
+    // Robot.log("driveTrain periodic...");
   }
 
   @Override
@@ -136,7 +136,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
     m_gyroSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
 
-    Robot.log("driveTrain SIM periodic...");
+    // Robot.log("driveTrain SIM periodic...");
   }
 
   /**
@@ -178,6 +178,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
+  public void resetOdometry(){
+    Pose2d p = getPose();
+    resetOdometry(p);
+  }
+
+
   /**
    * Drives the robot using arcade controls.
    *
@@ -185,9 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    SmartDashboard.putNumber("Drive Speed: ", fwd);
-    SmartDashboard.putNumber("Drive Rotation: ", rot);
-    Robot.log(" ### arcadeDrive...");
+    // Robot.log(" ### arcadeDrive...");
     m_drive.arcadeDrive(fwd, rot);
   }
 
@@ -213,6 +217,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
   }
+
+  // public void resetSIMEncoders(){
+  //   Robot.log("_____SIM encoder reset");
+  //   m_leftEncoderSim.resetData();
+  //   m_rightEncoderSim.resetData();
+  // }
 
   /**
    * Gets the average distance of the two encoders.
