@@ -45,12 +45,13 @@ public class RobotContainer {
   public RobotContainer() {
 
     // set up possible auto start position
-    m_chooser.addOption("Left-Center","Left-Center"); //
-    m_chooser.addOption("Right-Center","Right-Center");
-    m_chooser.addOption("Left-Up","Left-Up");
-    m_chooser.addOption("Left-Down","Left-Down");
-    m_chooser.setDefaultOption("Right-Up", "Right-Up");
-    m_chooser.addOption("Right-Down", "Right-Down");
+    m_chooser.setDefaultOption("None", null);
+    m_chooser.addOption("T1-Center","T1-Center"); //
+    m_chooser.addOption("T2-Center","T2-Center");
+    m_chooser.addOption("T1-Left","T1-Left");
+    m_chooser.addOption("T1-Right","T1-Right");
+    m_chooser.addOption("T2-Left", "T2-Left");
+    m_chooser.addOption("T2-Right", "T2-Right");
     SmartDashboard.putData(m_chooser);
 
     // Configure the button bindings
@@ -114,51 +115,47 @@ public class RobotContainer {
       return null;
 
     switch(position){
-      case "Left-Up":
+      case "T1-Left":
         ax=6.5; ay=5.5; ah=-44;
-        cmd = pause(2).andThen(
+        cmd = pause().andThen(
           maneuver(-0.5, 0, 0.65)).andThen(
           maneuver(0, 0.23, 0.5)).andThen(
           maneuver(0.4, -0.20, 2.68)).andThen(
-          // maneuver(0, -0.15, 0.7)).andThen(
-          // maneuver(0.5, 0, 0.9)).andThen(
             fullStop());
         break;
-      case "Left-Center":
-        ax=6.15; ay=4.9; ah=-20;
+      case "T1-Center":
+        ax=6.1; ay=4.95; ah=-21;
+        cmd = pause().andThen(
+          maneuver(-0.5, 0, 0.75)).andThen(
+          maneuver(0.5, 0, 1.38)).andThen(
+            fullStop());
         break;
-      case "Left-Down":
+      case "T1-Right":
         ax=6; ay=4.13; ah=0;
-        cmd = pause(2).andThen(
-          // maneuver(-0.5, 0, 0.68)).andThen(
-          // maneuver(0, -0.25, 0.5)).andThen(
-          // maneuver(0.5, 0, 0.7)).andThen(
-          // maneuver(0, 0.25, 0.875)).andThen(
-          // maneuver(0.5, 0, 0.9)).andThen(fullStop());
+        cmd = pause().andThen(
           maneuver(-0.5, 0, 0.7)).andThen(
           maneuver(0, -0.23, 0.5)).andThen(
           maneuver(0.4, 0.20, 2.71)).andThen(
           fullStop());
           break;
-      case "Right-Up":
+      case "T2-Left":
         ax=6.85; ay=2.35; ah=44;
-        cmd = pause(2).andThen(
+        cmd = pause().andThen(
           maneuver(-0.5, 0, 0.65)).andThen(
           maneuver(0, 0.23, 0.5)).andThen(
           maneuver(0.4, -0.20, 2.68)).andThen(
             fullStop());
           break;
-      case "Right-Center":
-        ax=7.45; ay=2; ah=70;
+      case "T2-Center":
+        ax=7.45; ay=1.97; ah=70;
+        cmd = pause().andThen(
+          maneuver(-0.5, 0, 0.75)).andThen(
+          maneuver(0.5, 0, 1.4)).andThen(
+            fullStop());
         break;
-      case "Right-Down":
+      case "T2-Right":
         ax=8.2; ay=1.85; ah=90;
-        cmd = pause(2).andThen(
-          // maneuver(-0.5, 0, 0.68)).andThen(
-          // maneuver(0, -0.25, 0.5)).andThen(
-          // maneuver(0.5, 0, 0.7)).andThen(
-          // maneuver(0, 0.25, 0.875)).andThen(
-          // maneuver(0.5, 0, 0.9)).andThen(fullStop());
+        cmd = pause().andThen(
           maneuver(-0.5, 0, 0.7)).andThen(
           maneuver(0, -0.23, 0.5)).andThen(
           maneuver(0.4, 0.20, 2.71)).andThen(
@@ -189,7 +186,7 @@ public class RobotContainer {
   }
 
   private Command pause(){
-    return pause(0.5);
+    return pause(1);
   }
   
 
