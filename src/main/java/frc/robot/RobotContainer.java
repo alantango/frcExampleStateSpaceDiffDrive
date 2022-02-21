@@ -45,11 +45,11 @@ public class RobotContainer {
   public RobotContainer() {
 
     // set up possible auto start position
-    m_chooser.setDefaultOption("Left-Center","Left-Center"); //
+    m_chooser.addOption("Left-Center","Left-Center"); //
     m_chooser.addOption("Right-Center","Right-Center");
     m_chooser.addOption("Left-Up","Left-Up");
     m_chooser.addOption("Left-Down","Left-Down");
-    m_chooser.addOption("Right-Up", "Right-Up");
+    m_chooser.setDefaultOption("Right-Up", "Right-Up");
     m_chooser.addOption("Right-Down", "Right-Down");
     SmartDashboard.putData(m_chooser);
 
@@ -96,44 +96,102 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(){
-    return getDummyAutoCommand();
+    
+    m_robotDrive.zeroHeading();
+    m_robotDrive.resetCurrPositionHeading();
+
+    return getSimpleAutoCommand();
     // return getRamesetAutoCommand();
   }
 
-  public Command getDummyAutoCommand(){
-    String autoStartPos = m_chooser.getSelected();
+  public Command getSimpleAutoCommand(){
     
-    m_robotDrive.zeroHeading();
+    Command cmd = null;
+
+    double ax, ay, ah;
+    String position = m_chooser.getSelected();
+    if(position==null)
+      return null;
+
+    switch(position){
+      case "Left-Up":
+        ax=6.5; ay=5.5; ah=-44;
+        cmd = pause(2).andThen(
+          maneuver(-0.5, 0, 0.65)).andThen(
+          maneuver(0, 0.23, 0.5)).andThen(
+          maneuver(0.4, -0.20, 2.68)).andThen(
+          // maneuver(0, -0.15, 0.7)).andThen(
+          // maneuver(0.5, 0, 0.9)).andThen(
+            fullStop());
+        break;
+      case "Left-Center":
+        ax=6.15; ay=4.9; ah=-20;
+        break;
+      case "Left-Down":
+        ax=6; ay=4.13; ah=0;
+        cmd = pause(2).andThen(
+          // maneuver(-0.5, 0, 0.68)).andThen(
+          // maneuver(0, -0.25, 0.5)).andThen(
+          // maneuver(0.5, 0, 0.7)).andThen(
+          // maneuver(0, 0.25, 0.875)).andThen(
+          // maneuver(0.5, 0, 0.9)).andThen(fullStop());
+          maneuver(-0.5, 0, 0.7)).andThen(
+          maneuver(0, -0.23, 0.5)).andThen(
+          maneuver(0.4, 0.20, 2.71)).andThen(
+          fullStop());
+          break;
+      case "Right-Up":
+        ax=6.85; ay=2.35; ah=44;
+        cmd = pause(2).andThen(
+          maneuver(-0.5, 0, 0.65)).andThen(
+          maneuver(0, 0.23, 0.5)).andThen(
+          maneuver(0.4, -0.20, 2.68)).andThen(
+            fullStop());
+          break;
+      case "Right-Center":
+        ax=7.45; ay=2; ah=70;
+        break;
+      case "Right-Down":
+        ax=8.2; ay=1.85; ah=90;
+        cmd = pause(2).andThen(
+          // maneuver(-0.5, 0, 0.68)).andThen(
+          // maneuver(0, -0.25, 0.5)).andThen(
+          // maneuver(0.5, 0, 0.7)).andThen(
+          // maneuver(0, 0.25, 0.875)).andThen(
+          // maneuver(0.5, 0, 0.9)).andThen(fullStop());
+          maneuver(-0.5, 0, 0.7)).andThen(
+          maneuver(0, -0.23, 0.5)).andThen(
+          maneuver(0.4, 0.20, 2.71)).andThen(
+          fullStop());
+        break;
+      default:
+        return null;
+    }
+    // ah is heading expressed in 360, gyro degree range is -180/180
+    m_robotDrive.resetOdometry(new Pose2d(ax, ay, Rotation2d.fromDegrees(ah/2)));  
+    return cmd;
     
-    m_robotDrive.resetOdometry(new Pose2d(6, 4, Rotation2d.fromDegrees(0)));
-
-    return new WaitCommand(2).andThen(
-      new RunCommand(() -> m_robotDrive.arcadeDrive(-0.5, 0), m_robotDrive).withTimeout(0.69)).andThen(
-      new WaitCommand(0.2)).andThen(
-      new RunCommand(() -> m_robotDrive.arcadeDrive(0, -0.25), m_robotDrive).withTimeout(0.5)).andThen(
-        new WaitCommand(0.2)).andThen(
-      new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, 0), m_robotDrive).withTimeout(0.7)).andThen(
-        new WaitCommand(0.2)).andThen(
-      new RunCommand( ()-> m_robotDrive.arcadeDrive(0, 0.25), m_robotDrive).withTimeout(0.875)).andThen(
-        new WaitCommand(0.2)).andThen(
-      new RunCommand(() -> m_robotDrive.arcadeDrive(0.5, 0), m_robotDrive).withTimeout(0.85)).andThen(
-        new RunCommand(() -> m_robotDrive.tankDriveVolts(0,0))
-      );
-        //   );
-
-    // return new WaitCommand(0.5).andThen(
-    //   new RunCommand(
-    //       () -> m_robotDrive.arcadeDrive(-0.5, 0), m_robotDrive))
-    //    .withTimeout(2).andThen(
-    //     new WaitCommand(0.5)).andThen( 
-    //     new RunCommand(
-    //           () -> m_robotDrive.arcadeDrive(0, -0.5), m_robotDrive).withTimeout(0.5)).andThen(
-    //     new RunCommand(
-    //           () -> m_robotDrive.arcadeDrive(0, 0.5), m_robotDrive).withTimeout(0.5)).andThen(
-    //       ()->m_robotDrive.arcadeDrive(0.5,0)
-    //     );
-      
   }
+
+  private Command maneuver(double fwd, double rot, double elapse){
+    return new RunCommand(
+      () -> m_robotDrive.arcadeDrive(fwd, rot), m_robotDrive)
+      .withTimeout(elapse)
+      .andThen(pause());
+  }
+
+  private Command fullStop(){
+    return maneuver(0,0,0);
+  }
+
+  private Command pause(double seconds){
+    return new WaitCommand(seconds);
+  }
+
+  private Command pause(){
+    return pause(0.5);
+  }
+  
 
   public Command getRamesetAutoCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast

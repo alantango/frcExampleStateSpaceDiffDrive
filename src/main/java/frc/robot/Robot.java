@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -50,7 +51,7 @@ public class Robot extends TimedRobot {
     double drawCurrent = m_robotContainer.getRobotDrive().getDrawnCurrentAmps();
     double loadedVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(drawCurrent);
     RoboRioSim.setVInVoltage(loadedVoltage);
-    log("__robot SIM periodic");
+    // log("__robot SIM periodic");
   }
 
   
@@ -66,7 +67,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopExit() {
-    m_robotContainer.getRobotDrive().resetOdometry();
+    // m_robotContainer.getRobotDrive().resetOdometry();
+    m_robotContainer.getRobotDrive().resetEncoders();
     System.out.println(" ===== TELE Exit...");
   }
 
@@ -80,8 +82,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_robotContainer.getAutonomousCommand().schedule();
-    System.out.println("--- Auto Init");
+
+    Command cmd = m_robotContainer.getAutonomousCommand();
+    if(cmd!=null){
+      m_robotContainer.getAutonomousCommand().schedule();
+      System.out.println("--- Auto Init");
+    }else{
+      System.out.println("--- NO Auto command chosen!");
+    }
+    
   }
 
   @Override
@@ -91,7 +100,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    m_robotContainer.getRobotDrive().resetOdometry();
+    // m_robotContainer.getRobotDrive().zeroHeading();
+    // m_robotContainer.getRobotDrive().resetCurrPositionHeading();
     System.out.println("--- Auto Exit");
   }
 

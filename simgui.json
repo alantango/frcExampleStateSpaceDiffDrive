@@ -37,6 +37,14 @@
     "windows": {
       "/SmartDashboard/Field": {
         "Robot": {
+          "arrowColor": [
+            0.04636489227414131,
+            0.6259258985519409,
+            0.04636489227414131,
+            255.0
+          ],
+          "arrowSize": 48,
+          "arrowWeight": 8.0,
           "length": 0.8107680082321167
         },
         "height": 8.229599952697754,

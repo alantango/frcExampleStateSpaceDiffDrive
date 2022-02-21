@@ -178,9 +178,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
-  public void resetOdometry(){
-    Pose2d p = getPose();
-    resetOdometry(p);
+  public void resetCurrPositionHeading(){
+    resetEncoders();
+    m_odometry.resetPosition(getPose(), Rotation2d.fromDegrees(0));
   }
 
 
