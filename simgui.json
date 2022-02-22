@@ -48,7 +48,7 @@
           "length": 0.8107680082321167
         },
         "height": 8.229599952697754,
-        "image": "/home/alan/git/frcExampleStateSpaceDiffDrive/FRC-2022-Field.jpg",
+        "image": "C:\\Users\\alan\\git\\frcExampleStateSpaceDiffDrive\\FRC-2022-Field.jpg",
         "units": "meters",
         "width": 16.459199905395508,
         "window": {
@@ -75,29 +75,12 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": -37,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Drive Rotation: "
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Drive Speed: "
-            }
-          ]
+          "height": 159
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
