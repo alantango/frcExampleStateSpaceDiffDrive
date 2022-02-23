@@ -70,7 +70,7 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.arcadeDrive(
-                    -m_driverController.getLeftY(), m_driverController.getRightX()*.35),
+                    -m_driverController.getLeftY(), m_driverController.getRightX()*.55),
             m_robotDrive));
   }
 
@@ -139,8 +139,8 @@ public class RobotContainer {
         ax=6; ay=4.13; ah=0;
         cmd = initWait().andThen(
           maneuver(-0.5, 0, 0.7)).andThen(
-          maneuver(0, -0.23, 0.5)).andThen(
-          maneuver(0.4, 0.20, 2.71)).andThen(
+          maneuver(0, -0.239, 0.55)).andThen(
+          maneuver(0.4, 0.20, 2.78)).andThen(
           fullStop());
           break;
       case "T2-Left":
@@ -161,9 +161,9 @@ public class RobotContainer {
       case "T2-Right":
         ax=8.2; ay=1.85; ah=90;
         cmd = initWait().andThen(
-          maneuver(-0.5, 0, 0.7)).andThen(
-          maneuver(0, -0.23, 0.5)).andThen(
-          maneuver(0.4, 0.20, 2.71)).andThen(
+          maneuver(-0.5, 0, 0.65)).andThen(
+          maneuver(0, -0.25, 0.4)).andThen(
+          maneuver(0.4, 0.19, 2.5)).andThen(
           fullStop());
         break;
       default:
